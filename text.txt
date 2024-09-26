@@ -1,0 +1,215 @@
+
+C program that implements **Shortest Remaining Time First (SRTF)** and **Longest Remaining Time First (LRTF)** schedulers, 
+(preemptive scheduling algorithms). 
+The program accepts process details such as **Arrival Time**, and **Burst Time** as input,
+
+### Explanation:
+- **SRTF (Shortest Remaining Time First)**: At every time unit, the process with the shortest remaining burst time is selected and executed.
+- **LRTF (Longest Remaining Time First)**: At every time unit, the process with the longest remaining burst time is selected and executed.
+
+#include <stdio.h>
+#include <limits.h>
+
+// Structure for each process
+struct Process {
+    int id;
+    int arrival_time;
+    int burst_time;
+    int remaining_time;
+    int completion_time;
+    int turnaround_time;
+    int waiting_time;
+    int response_time;
+    int started; // 0 if not started yet, 1 if started
+};
+
+// Function to calculate and print the results
+void printTable(struct Process p[], int n) {
+    float total_tat = 0, total_wt = 0, total_rt = 0;
+    printf("\nProcess ID | Arrival Time | Burst Time | Completion Time | Turnaround Time | Waiting Time | Response Time\n");
+    printf("---------------------------------------------------------------------------------------------------------\n");
+    
+    for (int i = 0; i < n; i++) {
+        total_tat += p[i].turnaround_time;
+        total_wt += p[i].waiting_time;
+        total_rt += p[i].response_time;
+        
+        printf("%9d | %12d | %10d | %15d | %15d | %12d | %13d\n", 
+            p[i].id, p[i].arrival_time, p[i].burst_time, 
+            p[i].completion_time, p[i].turnaround_time, 
+            p[i].waiting_time, p[i].response_time);
+    }
+    
+    printf("Average Turnaround Time: %.2f\n", total_tat / n);
+    printf("Average Waiting Time: %.2f\n", total_wt / n);
+    printf("Average Response Time: %.2f\n", total_rt / n);
+}
+
+// Function to implement Shortest Remaining Time First (SRTF)
+void srtfScheduling(struct Process p[], int n) {
+    int completed = 0, current_time = 0, min_idx;
+    int min_remaining_time;
+    
+    printf("\n--- Shortest Remaining Time First (SRTF) Scheduler ---\n");
+    
+    while (completed != n) {
+        min_remaining_time = INT_MAX;
+        min_idx = -1;
+        
+        // Find process with shortest remaining time that has arrived
+        for (int i = 0; i < n; i++) {
+            if (p[i].arrival_time <= current_time && p[i].remaining_time > 0 && p[i].remaining_time < min_remaining_time) {
+                min_remaining_time = p[i].remaining_time;
+                min_idx = i;
+            }
+        }
+
+        if (min_idx == -1) {
+            current_time++; // No process is available, move time forward
+        } else {
+            if (p[min_idx].started == 0) {
+                p[min_idx].response_time = current_time - p[min_idx].arrival_time;
+                p[min_idx].started = 1;
+            }
+
+            // Execute the process for one unit of time
+            p[min_idx].remaining_time--;
+            current_time++;
+
+            // If the process is completed
+            if (p[min_idx].remaining_time == 0) {
+                p[min_idx].completion_time = current_time;
+                p[min_idx].turnaround_time = p[min_idx].completion_time - p[min_idx].arrival_time;
+                p[min_idx].waiting_time = p[min_idx].turnaround_time - p[min_idx].burst_time;
+                completed++;
+            }
+        }
+    }
+    
+    printTable(p, n);
+}
+
+// Function to implement Longest Remaining Time First (LRTF)
+void lrtfScheduling(struct Process p[], int n) {
+    int completed = 0, current_time = 0, max_idx;
+    int max_remaining_time;
+
+    printf("\n--- Longest Remaining Time First (LRTF) Scheduler ---\n");
+
+    while (completed != n) {
+        max_remaining_time = INT_MIN;
+        max_idx = -1;
+
+        // Find process with longest remaining time that has arrived
+        for (int i = 0; i < n; i++) {
+            if (p[i].arrival_time <= current_time && p[i].remaining_time > 0 && p[i].remaining_time > max_remaining_time) {
+                max_remaining_time = p[i].remaining_time;
+                max_idx = i;
+            }
+        }
+
+        if (max_idx == -1) {
+            current_time++; // No process is available, move time forward
+        } else {
+            if (p[max_idx].started == 0) {
+                p[max_idx].response_time = current_time - p[max_idx].arrival_time;
+                p[max_idx].started = 1;
+            }
+
+            // Execute the process for one unit of time
+            p[max_idx].remaining_time--;
+            current_time++;
+
+            // If the process is completed
+            if (p[max_idx].remaining_time == 0) {
+                p[max_idx].completion_time = current_time;
+                p[max_idx].turnaround_time = p[max_idx].completion_time - p[max_idx].arrival_time;
+                p[max_idx].waiting_time = p[max_idx].turnaround_time - p[max_idx].burst_time;
+                completed++;
+            }
+        }
+    }
+    
+    printTable(p, n);
+}
+
+// Main function to take input and schedule processes
+int main() {
+    int n;
+    
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+    
+    // Error handling for invalid input
+    if (n <= 0) {
+        printf("Invalid number of processes. Exiting...\n");
+        return 1;
+    }
+
+    struct Process processes[n];
+    
+    // Taking input for each process
+    for (int i = 0; i < n; i++) {
+        processes[i].id = i + 1; // Process ID starts from 1
+        printf("Enter arrival time and burst time for process %d: ", processes[i].id);
+        scanf("%d %d", &processes[i].arrival_time, &processes[i].burst_time);
+        
+        // Error handling for invalid times
+        if (processes[i].arrival_time < 0 || processes[i].burst_time <= 0) {
+            printf("Invalid input for process %d. Exiting...\n", processes[i].id);
+            return 1;
+        }
+
+        processes[i].remaining_time = processes[i].burst_time; // Initialize remaining time
+        processes[i].started = 0; // Process has not started yet
+    }
+    
+    // Shortest Remaining Time First (SRTF) scheduling
+    srtfScheduling(processes, n);
+    
+    // Reset remaining time and started status for LRTF scheduling
+    for (int i = 0; i < n; i++) {
+        processes[i].remaining_time = processes[i].burst_time;
+        processes[i].started = 0;
+    }
+    
+    // Longest Remaining Time First (LRTF) scheduling
+    lrtfScheduling(processes, n);
+
+    return 0;
+}
+```
+
+### Key Features and Explanations:
+
+1. **Process Structure**: 
+   - Each process has fields for its ID, arrival time, burst time, completion time, turnaround time, waiting time, and response time. A `remaining_time` field is used to track the remaining time during preemptive scheduling.
+
+2. **SRTF Scheduling**:
+   - The process with the shortest remaining burst time is selected at each time unit.
+   - If two processes have the same remaining time, the process that arrives first is selected.
+   - Response time is calculated when the process starts for the first time.
+
+3. **LRTF Scheduling**:
+   - Similar to SRTF but selects the process with the longest remaining burst time.
+   - The process with the largest remaining burst time is selected at each time unit.
+
+4. **Output Table**:
+   - The program prints a table showing the process ID, arrival time, burst time, completion time, turnaround time, waiting time, and response time.
+   - It also calculates and prints the average turnaround time, waiting time, and response time for both algorithms.
+
+### Error Handling:
+- The program checks for valid input values (arrival time >= 0 and burst time > 0).
+- If invalid input is given, it displays an error message and exits.
+
+### Test Example:
+
+For 3 processes with the following inputs:
+
+```
+Process 1: Arrival Time = 0, Burst Time = 8
+Process 2: Arrival Time = 1, Burst Time = 4
+Process 3: Arrival Time = 2, Burst Time = 9
+```
+
+The program will simulate both SRTF and LRTF and print the results accordingly.
