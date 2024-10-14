@@ -1,3 +1,26 @@
+/* Cambria */
+@font-face {
+  font-family: 'Cambria';
+  src: url('assets\fonts\cambria.ttc') format('truetype'),
+       url('assets\fonts\cambriab.ttf') format('truetype'),
+       url('assets\fonts\cambriai.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Optional: Define additional font styles */
+@font-face {
+  font-family: 'Cambria';
+  src: url('assets\fonts\cambriab.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Cambria';
+  src: url('assets\fonts\cambriai.ttf') format('truetype');
+  font-style: italic;
+}
+
 .glass-morphism {
   background-color: transparent;
   backdrop-filter: blur(20px);
@@ -169,7 +192,7 @@ h2 {
   margin: 0;
 }
 h3 {
-  font-family: "Bree Serif", sans-serif;
+  font-family: "Cambria", sans-serif;
   font-size: 2rem;
   color: white;
 }
