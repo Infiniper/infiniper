@@ -1,9 +1,11 @@
 # 💫 Hey! I'm Vishwajeet.
 Results-driven Computer Science student with a strong foundation in software development, AI, and full-stack web <br>development. Adept at C, C++, Python, and JavaScript, with hands-on experience in building AI-powered solutions, <br>scalable web applications, and mini-game development projects. Proven ability to lead teams, collaborate effectively, <br>drive innovation, and solve real-world challenges. <br>Passionate about leveraging technology and problem-solving to build impactful products. Actively seeking <br>Software and research internships to apply & enhance my technical and creative skills. <br>I believe that technology has the power to solve real-world problems and bring meaningful change, and I'm dedicated to being part of that journey.
+<br>
 My website - https://infiniper.github.io/infiniper/
 
 ## 🌐 Socials:
 Would you like to talk to me, or do you have any questions? 
+<br>
 Lets talk and have fun.
 [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/infiniper) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/vishwajeetsingh1567) [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?logo=YouTube&logoColor=white)](https://youtube.com/@UCBv7nM0G792K8VL4DmuHKZw) [![email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:infiniper@gmail.com) 
 
